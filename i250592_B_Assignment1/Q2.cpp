@@ -65,6 +65,38 @@ int balanceValue(int* arr, int size) {
 
 
 
+int* createBalancedArray(int* arr, int size, int& newSize){
+    int count = 0;
+    int* equilibriumIndices = findEquilibriumIndices(arr, size, count);
+
+    if (count == 0){
+        newSize = 0;
+        return nullptr;
+    }
+    int firstEquilibrium = *(equilibriumIndices + 0);
+    int lastEquilibrium = *(equilibriumIndices + count - 1);
+    newSize = firstEquilibrium + (size - lastEquilibrium - 1);
+    
+    if (newSize == 0){
+        delete[] equilibriumIndices;
+        return nullptr;
+    }
+    int* balancedArray = new int[newSize];
+    for (int i = 0; i < firstEquilibrium; i++){
+        *(balancedArray + i) = *(arr + i);
+    }
+    int newIndex = firstEquilibrium;
+    for (int i = lastEquilibrium + 1; i < size; i++){
+        *(balancedArray + newIndex) = *(arr + i);
+        newIndex = newIndex + 1;
+    }
+    delete[] equilibriumIndices;
+    return balancedArray;
+}
+
+
+
+
 
 int main(){
     int size;
@@ -94,6 +126,20 @@ int main(){
     }
     int balance = balanceValue(arr, size);
     cout << "Balance value: " << balance << endl;
+
+    int newSize = 0;
+    int* balancedArray = createBalancedArray(arr, size, newSize);
+    if (balancedArray == nullptr){
+        cout << "Balanced array is empty" << endl;
+    }
+    else{
+        cout << "balanced array: ";
+        for (int i = 0; i < newSize; i++){
+            cout << *(balancedArray + i) << " ";
+        }
+        cout << endl;
+        delete[] balancedArray;
+    }
     delete[] arr;
     return 0;
 }
