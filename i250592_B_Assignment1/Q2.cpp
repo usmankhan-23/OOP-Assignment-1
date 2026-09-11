@@ -39,6 +39,33 @@ int* findEquilibriumIndices(int* arr, int size, int& count){
 
 
 
+
+int balanceValue(int* arr, int size) {
+    int count = 0;
+    int* equilibriumIndices = findEquilibriumIndices(arr, size, count);
+    if (count == 0) {
+        return 0;
+    }
+    int firstEquilibrium = *(equilibriumIndices + 0);
+    int lastEquilibrium = *(equilibriumIndices + count - 1);
+    int sumBeforeFirst = 0;
+
+    for (int i = 0; i < firstEquilibrium; i++) {
+        sumBeforeFirst = sumBeforeFirst + *(arr + i);
+    }
+    int sumAfterLast = 0;
+    for (int i = lastEquilibrium + 1; i < size; i++){
+        sumAfterLast = sumAfterLast + *(arr + i);
+    }
+    int balance = sumBeforeFirst + sumAfterLast;
+    delete[] equilibriumIndices;
+    return balance;
+}
+
+
+
+
+
 int main(){
     int size;
     cout << "Enter size:";
@@ -65,6 +92,8 @@ int main(){
         cout << endl;
         delete[] result;
     }
+    int balance = balanceValue(arr, size);
+    cout << "Balance value: " << balance << endl;
     delete[] arr;
     return 0;
 }
