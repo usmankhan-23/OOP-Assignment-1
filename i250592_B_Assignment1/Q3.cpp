@@ -59,20 +59,50 @@ int dominantRow(int** matrix, int n){
 
 
 
+int** rotateMatrix(int** matrix, int n){
+    int** rotatedMatrix = createMatrix(n, n);
+    for (int i = 0; i < n; i++){
+        for (int j = 0; j < n; j++){
+            *(*(rotatedMatrix + j) + (n - 1 - i))
+                = *(*(matrix + i) + j);
+        }
+    }
+    return rotatedMatrix;
+}
+
+
+
 int main(){
     int n = 3;
     int** matrix = createMatrix(n, n);
     cout << "Enter matrix:" << endl;
-
+    
     inputMatrix(matrix, n, n);
+    int** rotatedMatrix = rotateMatrix(matrix, n);
 
-    int result = dominantRow(matrix, n);
+    cout << endl;
+    cout << "Original matrix:" << endl;
+    for (int i = 0; i < n; i++){
+        for (int j = 0; j < n; j++){
+            cout << *(*(matrix + i) + j) << " ";
+        }
+        cout << endl;
+    }
 
-    cout << "Dominant row: " << result << endl;
+    cout << endl;
+    cout << "Rotated matrix:" << endl;
+    for (int i = 0; i < n; i++){
+        for (int j = 0; j < n; j++){
+            cout << *(*(rotatedMatrix + i) + j) << " ";
+        }
+        cout << endl;
+    }
     for (int i = 0; i < n; i++){
         delete[] * (matrix + i);
+        delete[] * (rotatedMatrix + i);
     }
     delete[] matrix;
+    delete[] rotatedMatrix;
     return 0;
 }
 
