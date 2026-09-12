@@ -31,6 +31,18 @@ void inputGrid(int** grid, int rows, int cols){
 
 
 
+void displayGrid(int** grid, int rows, int cols){
+    for (int i = 0; i < rows; i++){
+        for (int j = 0; j < cols; j++){
+            cout << *(*(grid + i) + j) << " ";
+        }
+        cout << endl;
+    }
+}
+
+
+
+
 int main()
 {
     int rows;
@@ -52,15 +64,7 @@ int main()
 
     cout << "Grid:" << endl;
 
-    for (int i = 0; i < rows; i++)
-    {
-        for (int j = 0; j < cols; j++)
-        {
-            cout << *(*(grid + i) + j) << " ";
-        }
-
-        cout << endl;
-    }
+    displayGrid(grid, rows, cols);
 
     for (int i = 0; i < rows; i++)
     {
