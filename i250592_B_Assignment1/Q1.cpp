@@ -75,38 +75,75 @@ void findFirstCell(int** grid, int rows, int cols, int value, int& row, int& col
 
 
 
+
+
+bool isValidMove(int** grid, bool** visited, int rows, int cols, int r, int c){
+    if (r < 0 || r >= rows || c < 0 || c >= cols){
+        return false;
+    }
+    if (*(*(grid + r) + c) == 1){
+        return false;
+    }
+    if (*(*(visited + r) + c)){
+        return false;
+    }
+    return true;
+} 
+
+
+
+
+
 int main()
 {
-    int rows;
-    int cols;
-
-    cout << "Enter rows: ";
-    cin >> rows;
-
-    cout << "Enter columns: ";
-    cin >> cols;
+    int rows = 3;
+    int cols = 3;
 
     int** grid = createGrid(rows, cols);
 
-    cout << "Enter grid values:" << endl;
+    bool** visited = new bool* [rows];
 
-    inputGrid(grid, rows, cols);
+    for (int i = 0; i < rows; i++)
+    {
+        *(visited + i) = new bool[cols];
+    }
 
-    cout << endl;
+    *(*(grid + 0) + 0) = 0;
+    *(*(grid + 0) + 1) = 1;
+    *(*(grid + 0) + 2) = 0;
 
-    displayGrid(grid, rows, cols);
+    *(*(grid + 1) + 0) = 0;
+    *(*(grid + 1) + 1) = 2;
+    *(*(grid + 1) + 2) = 0;
 
-    int value;
-    int row;
-    int col;
+    *(*(grid + 2) + 0) = 3;
+    *(*(grid + 2) + 1) = 0;
+    *(*(grid + 2) + 2) = 0;
 
-    cout << endl;
-    cout << "Enter value to find: ";
-    cin >> value;
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            *(*(visited + i) + j) = false;
+        }
+    }
 
-    findFirstCell(grid, rows, cols, value, row, col);
+    *(*(visited + 2) + 2) = true;
 
-    cout << "First occurrence: (" << row << ", " << col << ")" << endl;
+    cout << "Test 1: " << isValidMove(grid, visited, rows, cols, 1, 1) << endl;
+    cout << "Test 2: " << isValidMove(grid, visited, rows, cols, 0, 1) << endl;
+    cout << "Test 3: " << isValidMove(grid, visited, rows, cols, 2, 2) << endl;
+    cout << "Test 4: " << isValidMove(grid, visited, rows, cols, -1, 1) << endl;
+    cout << "Test 5: " << isValidMove(grid, visited, rows, cols, 3, 1) << endl;
+    cout << "Test 6: " << isValidMove(grid, visited, rows, cols, 1, -1) << endl;
+    cout << "Test 7: " << isValidMove(grid, visited, rows, cols, 1, 3) << endl;
+
+    for (int i = 0; i < rows; i++)
+    {
+        delete[] * (visited + i);
+    }
+
+    delete[] visited;
 
     for (int i = 0; i < rows; i++)
     {
