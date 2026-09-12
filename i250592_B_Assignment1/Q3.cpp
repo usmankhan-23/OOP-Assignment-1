@@ -123,33 +123,84 @@ bool isBalancedMatrix(int** matrix, int n)
         return false;
     }
     return true;
-} 
+}
+
+
+
+
+int** transformMatrix(int** matrix, int n){
+    int** transformedMatrix = createMatrix(n, n);
+    for (int i = 0; i < n; i++){
+        for (int j = 0; j < n; j++){
+            int value = *(*(matrix + i) + j);
+            if (i == j){
+                value = value * value;
+            }
+            else if (j == n - 1 - i){
+                if (value < 0){
+                    value = -value;
+                }
+            }
+            *(*(transformedMatrix + i) + j) = value;
+        }
+    }
+    return transformedMatrix;
+}
+
+
 
 int main()
 {
     int n;
+
     cout << "Enter matrix size: ";
     cin >> n;
+
     int** matrix = createMatrix(n, n);
+
     cout << "Enter matrix:" << endl;
+
     inputMatrix(matrix, n, n);
+
+    int** transformedMatrix = transformMatrix(matrix, n);
+
     cout << endl;
-    cout << "Diagonal Difference: "
-        << diagonalDifference(matrix, n) << endl;
-    cout << "Matrix Balance: "
-        << matrixBalance(matrix, n) << endl;
-    cout << "Dominant Row: "
-        << dominantRow(matrix, n) << endl;
-    if (isBalancedMatrix(matrix, n)){
-        cout << "Balanced Matrix: Yes" << endl;
+
+    cout << "Original Matrix:" << endl;
+
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            cout << *(*(matrix + i) + j) << " ";
+        }
+
+        cout << endl;
     }
-    else{
-        cout << "Balanced Matrix: No" << endl;
+
+    cout << endl;
+
+    cout << "Transformed Matrix:" << endl;
+
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            cout << *(*(transformedMatrix + i) + j) << " ";
+        }
+
+        cout << endl;
     }
-    for (int i = 0; i < n; i++){
+
+    for (int i = 0; i < n; i++)
+    {
         delete[] * (matrix + i);
+        delete[] * (transformedMatrix + i);
     }
+
     delete[] matrix;
+    delete[] transformedMatrix;
+
     return 0;
 }
 
