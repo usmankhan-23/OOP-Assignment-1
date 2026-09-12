@@ -93,6 +93,20 @@ bool isValidMove(int** grid, bool** visited, int rows, int cols, int r, int c){
 
 
 
+int countReachable(int** grid, bool** visited, int rows, int cols, int r, int c){ 
+    if (!isValidMove(grid, visited, rows, cols, r, c)){
+        return 0;
+    }
+    *(*(visited + r) + c) = true;
+    int count = 1;
+    count = count + countReachable(grid, visited, rows, cols, r - 1, c);
+    count = count + countReachable(grid, visited, rows, cols, r + 1, c);
+    count = count + countReachable(grid, visited, rows, cols, r, c - 1);
+    count = count + countReachable(grid, visited, rows, cols, r, c + 1);
+    return count;
+}
+
+
 
 int main()
 {
@@ -109,14 +123,14 @@ int main()
     }
 
     *(*(grid + 0) + 0) = 0;
-    *(*(grid + 0) + 1) = 1;
-    *(*(grid + 0) + 2) = 0;
+    *(*(grid + 0) + 1) = 0;
+    *(*(grid + 0) + 2) = 1;
 
     *(*(grid + 1) + 0) = 0;
-    *(*(grid + 1) + 1) = 2;
-    *(*(grid + 1) + 2) = 0;
+    *(*(grid + 1) + 1) = 0;
+    *(*(grid + 1) + 2) = 1;
 
-    *(*(grid + 2) + 0) = 3;
+    *(*(grid + 2) + 0) = 1;
     *(*(grid + 2) + 1) = 0;
     *(*(grid + 2) + 2) = 0;
 
@@ -128,15 +142,9 @@ int main()
         }
     }
 
-    *(*(visited + 2) + 2) = true;
+    int result = countReachable(grid, visited, rows, cols, 0, 0);
 
-    cout << "Test 1: " << isValidMove(grid, visited, rows, cols, 1, 1) << endl;
-    cout << "Test 2: " << isValidMove(grid, visited, rows, cols, 0, 1) << endl;
-    cout << "Test 3: " << isValidMove(grid, visited, rows, cols, 2, 2) << endl;
-    cout << "Test 4: " << isValidMove(grid, visited, rows, cols, -1, 1) << endl;
-    cout << "Test 5: " << isValidMove(grid, visited, rows, cols, 3, 1) << endl;
-    cout << "Test 6: " << isValidMove(grid, visited, rows, cols, 1, -1) << endl;
-    cout << "Test 7: " << isValidMove(grid, visited, rows, cols, 1, 3) << endl;
+    cout << "Reachable cells: " << result << endl;
 
     for (int i = 0; i < rows; i++)
     {
