@@ -212,7 +212,7 @@ int main(){
     deleteMatrix(rotatedMatrix, n);
     deleteMatrix(transformedMatrix, n);
     cout << endl;
-    cout << "All memory work is booom guuuud "<< endl << "ALHAMDULILAH" << endl;
+    cout << "memory work is booom guuuud "<< endl << "ALHAMDULILAH" << endl;
     return 0;
 }
 
