@@ -128,168 +128,196 @@ int countAccessibleVictims(int** grid, bool** visited, int rows, int cols, int r
 
 
 
-int main()
-{
-    int rows = 3;
-    int cols = 3;
+int countIsolatedVictims(int** grid, int** visited, int rows, int cols){
+    int count = 0;
+    for (int i = 0; i < rows; i++){
+        for (int j = 0; j < cols; j++){
+            if (*(*(grid + i) + j) == 2 && *(*(visited + i) + j) == 0){
+                bool hasReachableNeighbor = false;
 
-    int** grid = createGrid(rows, cols);
-
-    bool** visited = new bool* [rows];
-
-    for (int i = 0; i < rows; i++)
-    {
-        *(visited + i) = new bool[cols];
-    }
-
-    for (int i = 0; i < rows; i++)
-    {
-        for (int j = 0; j < cols; j++)
-        {
-            *(*(visited + i) + j) = false;
+                if (i - 1 >= 0 && *(*(visited + i - 1) + j) == 1){
+                    hasReachableNeighbor = true;
+                }
+                if (i + 1 < rows && *(*(visited + i + 1) + j) == 1){
+                    hasReachableNeighbor = true;
+                }
+                if (j - 1 >= 0 && *(*(visited + i) + j - 1) == 1){
+                    hasReachableNeighbor = true;
+                }
+                if (j + 1 < cols && *(*(visited + i) + j + 1) == 1){
+                    hasReachableNeighbor = true;
+                }
+                if (!hasReachableNeighbor){
+                    count++;
+                }
+            }
         }
     }
+    return count;
+} 
+
+
+
+int main()
+{
+    int rows = 4;
+    int cols = 4;
+
+    int** grid = createGrid(rows, cols);
+    int** visited = createGrid(rows, cols);
 
     cout << "Test 1: ";
 
-    *(*(grid + 0) + 0) = 4;
+    *(*(grid + 0) + 0) = 2;
     *(*(grid + 0) + 1) = 0;
-    *(*(grid + 0) + 2) = 2;
+    *(*(grid + 0) + 2) = 1;
+    *(*(grid + 0) + 3) = 2;
 
     *(*(grid + 1) + 0) = 0;
-    *(*(grid + 1) + 1) = 1;
+    *(*(grid + 1) + 1) = 4;
     *(*(grid + 1) + 2) = 0;
+    *(*(grid + 1) + 3) = 1;
 
-    *(*(grid + 2) + 0) = 2;
+    *(*(grid + 2) + 0) = 1;
     *(*(grid + 2) + 1) = 0;
-    *(*(grid + 2) + 2) = 0;
+    *(*(grid + 2) + 2) = 1;
+    *(*(grid + 2) + 3) = 0;
 
-    cout << countAccessibleVictims(grid, visited, rows, cols, 0, 0) << endl;
+    *(*(grid + 3) + 0) = 2;
+    *(*(grid + 3) + 1) = 1;
+    *(*(grid + 3) + 2) = 0;
+    *(*(grid + 3) + 3) = 2;
 
+    *(*(visited + 0) + 0) = 0;
+    *(*(visited + 0) + 1) = 1;
+    *(*(visited + 0) + 2) = 0;
+    *(*(visited + 0) + 3) = 0;
 
-    for (int i = 0; i < rows; i++)
-    {
-        for (int j = 0; j < cols; j++)
-        {
-            *(*(visited + i) + j) = false;
-        }
-    }
+    *(*(visited + 1) + 0) = 1;
+    *(*(visited + 1) + 1) = 1;
+    *(*(visited + 1) + 2) = 1;
+    *(*(visited + 1) + 3) = 0;
+
+    *(*(visited + 2) + 0) = 0;
+    *(*(visited + 2) + 1) = 1;
+    *(*(visited + 2) + 2) = 0;
+    *(*(visited + 2) + 3) = 0;
+
+    *(*(visited + 3) + 0) = 0;
+    *(*(visited + 3) + 1) = 0;
+    *(*(visited + 3) + 2) = 0;
+    *(*(visited + 3) + 3) = 0;
+
+    cout << countIsolatedVictims(grid, visited, rows, cols) << endl;
+
 
     cout << "Test 2: ";
 
-    *(*(grid + 0) + 0) = 4;
-    *(*(grid + 0) + 1) = 0;
-    *(*(grid + 0) + 2) = 0;
-
-    *(*(grid + 1) + 0) = 0;
-    *(*(grid + 1) + 1) = 1;
-    *(*(grid + 1) + 2) = 0;
-
-    *(*(grid + 2) + 0) = 0;
-    *(*(grid + 2) + 1) = 0;
-    *(*(grid + 2) + 2) = 0;
-
-    cout << countAccessibleVictims(grid, visited, rows, cols, 0, 0) << endl;
-
-
     for (int i = 0; i < rows; i++)
     {
         for (int j = 0; j < cols; j++)
         {
-            *(*(visited + i) + j) = false;
+            *(*(visited + i) + j) = 0;
         }
     }
+
+    *(*(grid + 0) + 0) = 2;
+    *(*(grid + 0) + 1) = 0;
+    *(*(grid + 0) + 2) = 0;
+    *(*(grid + 0) + 3) = 0;
+
+    *(*(grid + 1) + 0) = 0;
+    *(*(grid + 1) + 1) = 0;
+    *(*(grid + 1) + 2) = 0;
+    *(*(grid + 1) + 3) = 0;
+
+    *(*(grid + 2) + 0) = 0;
+    *(*(grid + 2) + 1) = 0;
+    *(*(grid + 2) + 2) = 0;
+    *(*(grid + 2) + 3) = 2;
+
+    *(*(grid + 3) + 0) = 0;
+    *(*(grid + 3) + 1) = 0;
+    *(*(grid + 3) + 2) = 0;
+    *(*(grid + 3) + 3) = 0;
+
+    *(*(visited + 0) + 1) = 1;
+
+    cout << countIsolatedVictims(grid, visited, rows, cols) << endl;
+
 
     cout << "Test 3: ";
 
-    *(*(grid + 0) + 0) = 4;
-    *(*(grid + 0) + 1) = 0;
-    *(*(grid + 0) + 2) = 0;
-
-    *(*(grid + 1) + 0) = 0;
-    *(*(grid + 1) + 1) = 1;
-    *(*(grid + 1) + 2) = 0;
-
-    *(*(grid + 2) + 0) = 0;
-    *(*(grid + 2) + 1) = 2;
-    *(*(grid + 2) + 2) = 0;
-
-    cout << countAccessibleVictims(grid, visited, rows, cols, 0, 0) << endl;
-
-
     for (int i = 0; i < rows; i++)
     {
         for (int j = 0; j < cols; j++)
         {
-            *(*(visited + i) + j) = false;
+            *(*(grid + i) + j) = 0;
+            *(*(visited + i) + j) = 0;
         }
     }
+
+    cout << countIsolatedVictims(grid, visited, rows, cols) << endl;
+
 
     cout << "Test 4: ";
 
-    *(*(grid + 0) + 0) = 4;
-    *(*(grid + 0) + 1) = 1;
-    *(*(grid + 0) + 2) = 2;
+    *(*(grid + 0) + 0) = 2;
+    *(*(grid + 0) + 1) = 0;
+    *(*(grid + 0) + 2) = 0;
+    *(*(grid + 0) + 3) = 0;
 
     *(*(grid + 1) + 0) = 0;
-    *(*(grid + 1) + 1) = 1;
+    *(*(grid + 1) + 1) = 0;
     *(*(grid + 1) + 2) = 0;
+    *(*(grid + 1) + 3) = 0;
 
     *(*(grid + 2) + 0) = 0;
     *(*(grid + 2) + 1) = 0;
     *(*(grid + 2) + 2) = 0;
+    *(*(grid + 2) + 3) = 0;
 
-    cout << countAccessibleVictims(grid, visited, rows, cols, 0, 0) << endl;
+    *(*(grid + 3) + 0) = 0;
+    *(*(grid + 3) + 1) = 0;
+    *(*(grid + 3) + 2) = 0;
+    *(*(grid + 3) + 3) = 0;
 
+    *(*(visited + 0) + 1) = 1;
+
+    cout << countIsolatedVictims(grid, visited, rows, cols) << endl;
+
+
+    cout << "Test 5: ";
 
     for (int i = 0; i < rows; i++)
     {
         for (int j = 0; j < cols; j++)
         {
-            *(*(visited + i) + j) = false;
+            *(*(visited + i) + j) = 0;
         }
     }
-
-    cout << "Test 5: ";
 
     *(*(grid + 0) + 0) = 2;
     *(*(grid + 0) + 1) = 0;
     *(*(grid + 0) + 2) = 0;
+    *(*(grid + 0) + 3) = 0;
 
     *(*(grid + 1) + 0) = 0;
     *(*(grid + 1) + 1) = 0;
     *(*(grid + 1) + 2) = 0;
+    *(*(grid + 1) + 3) = 0;
 
     *(*(grid + 2) + 0) = 0;
     *(*(grid + 2) + 1) = 0;
     *(*(grid + 2) + 2) = 0;
+    *(*(grid + 2) + 3) = 0;
 
-    cout << countAccessibleVictims(grid, visited, rows, cols, 0, 0) << endl;
+    *(*(grid + 3) + 0) = 0;
+    *(*(grid + 3) + 1) = 0;
+    *(*(grid + 3) + 2) = 0;
+    *(*(grid + 3) + 3) = 2;
 
-
-    for (int i = 0; i < rows; i++)
-    {
-        for (int j = 0; j < cols; j++)
-        {
-            *(*(visited + i) + j) = false;
-        }
-    }
-
-    cout << "Test 6: ";
-
-    *(*(grid + 0) + 0) = 2;
-    *(*(grid + 0) + 1) = 0;
-    *(*(grid + 0) + 2) = 2;
-
-    *(*(grid + 1) + 0) = 0;
-    *(*(grid + 1) + 1) = 0;
-    *(*(grid + 1) + 2) = 0;
-
-    *(*(grid + 2) + 0) = 2;
-    *(*(grid + 2) + 1) = 0;
-    *(*(grid + 2) + 2) = 0;
-
-    cout << countAccessibleVictims(grid, visited, rows, cols, 0, 0) << endl;
+    cout << countIsolatedVictims(grid, visited, rows, cols) << endl;
 
 
     for (int i = 0; i < rows; i++)
