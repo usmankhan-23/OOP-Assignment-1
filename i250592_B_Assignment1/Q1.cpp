@@ -158,95 +158,76 @@ int countIsolatedVictims(int** grid, int** visited, int rows, int cols){
 
 
 
+
+
+void analyzeSupplyPoints(int** grid, int** visited, int rows, int cols){
+    int supplyCount = 0;
+    for (int i = 0; i < rows; i++){
+        for (int j = 0; j < cols; j++){
+            if (*(*(grid + i) + j) == 3){
+                supplyCount++;
+                cout << "Supply Point at (" << i << ", " << j << "): ";
+                if (*(*(visited + i) + j) == 1){
+                    cout << "Reachable" << endl;
+                }
+                else{
+                    cout << "Not Reachable" << endl;
+                }
+            }
+        }
+    }
+    if (supplyCount == 0)
+    {
+        cout << "No supply point exists." << endl;
+    }
+}
+
+
 int main()
 {
-    int rows = 4;
+    int rows = 3;
     int cols = 4;
 
     int** grid = createGrid(rows, cols);
     int** visited = createGrid(rows, cols);
 
-    cout << "Test 1: ";
-
-    *(*(grid + 0) + 0) = 2;
+    *(*(grid + 0) + 0) = 4;
     *(*(grid + 0) + 1) = 0;
-    *(*(grid + 0) + 2) = 1;
-    *(*(grid + 0) + 3) = 2;
+    *(*(grid + 0) + 2) = 3;
+    *(*(grid + 0) + 3) = 1;
 
     *(*(grid + 1) + 0) = 0;
-    *(*(grid + 1) + 1) = 4;
+    *(*(grid + 1) + 1) = 1;
     *(*(grid + 1) + 2) = 0;
-    *(*(grid + 1) + 3) = 1;
-
-    *(*(grid + 2) + 0) = 1;
-    *(*(grid + 2) + 1) = 0;
-    *(*(grid + 2) + 2) = 1;
-    *(*(grid + 2) + 3) = 0;
-
-    *(*(grid + 3) + 0) = 2;
-    *(*(grid + 3) + 1) = 1;
-    *(*(grid + 3) + 2) = 0;
-    *(*(grid + 3) + 3) = 2;
-
-    *(*(visited + 0) + 0) = 0;
-    *(*(visited + 0) + 1) = 1;
-    *(*(visited + 0) + 2) = 0;
-    *(*(visited + 0) + 3) = 0;
-
-    *(*(visited + 1) + 0) = 1;
-    *(*(visited + 1) + 1) = 1;
-    *(*(visited + 1) + 2) = 1;
-    *(*(visited + 1) + 3) = 0;
-
-    *(*(visited + 2) + 0) = 0;
-    *(*(visited + 2) + 1) = 1;
-    *(*(visited + 2) + 2) = 0;
-    *(*(visited + 2) + 3) = 0;
-
-    *(*(visited + 3) + 0) = 0;
-    *(*(visited + 3) + 1) = 0;
-    *(*(visited + 3) + 2) = 0;
-    *(*(visited + 3) + 3) = 0;
-
-    cout << countIsolatedVictims(grid, visited, rows, cols) << endl;
-
-
-    cout << "Test 2: ";
-
-    for (int i = 0; i < rows; i++)
-    {
-        for (int j = 0; j < cols; j++)
-        {
-            *(*(visited + i) + j) = 0;
-        }
-    }
-
-    *(*(grid + 0) + 0) = 2;
-    *(*(grid + 0) + 1) = 0;
-    *(*(grid + 0) + 2) = 0;
-    *(*(grid + 0) + 3) = 0;
-
-    *(*(grid + 1) + 0) = 0;
-    *(*(grid + 1) + 1) = 0;
-    *(*(grid + 1) + 2) = 0;
-    *(*(grid + 1) + 3) = 0;
+    *(*(grid + 1) + 3) = 3;
 
     *(*(grid + 2) + 0) = 0;
     *(*(grid + 2) + 1) = 0;
-    *(*(grid + 2) + 2) = 0;
-    *(*(grid + 2) + 3) = 2;
+    *(*(grid + 2) + 0) = 0;
+    *(*(grid + 2) + 3) = 0;
 
-    *(*(grid + 3) + 0) = 0;
-    *(*(grid + 3) + 1) = 0;
-    *(*(grid + 3) + 2) = 0;
-    *(*(grid + 3) + 3) = 0;
-
+    *(*(visited + 0) + 0) = 1;
     *(*(visited + 0) + 1) = 1;
+    *(*(visited + 0) + 2) = 1;
+    *(*(visited + 0) + 3) = 0;
 
-    cout << countIsolatedVictims(grid, visited, rows, cols) << endl;
+    *(*(visited + 1) + 0) = 1;
+    *(*(visited + 1) + 1) = 0;
+    *(*(visited + 1) + 2) = 1;
+    *(*(visited + 1) + 3) = 0;
+
+    *(*(visited + 2) + 0) = 1;
+    *(*(visited + 2) + 1) = 1;
+    *(*(visited + 2) + 2) = 1;
+    *(*(visited + 2) + 3) = 1;
+
+    cout << "Test 1:" << endl;
+
+    analyzeSupplyPoints(grid, visited, rows, cols);
 
 
-    cout << "Test 3: ";
+    cout << endl;
+    cout << "Test 2:" << endl;
 
     for (int i = 0; i < rows; i++)
     {
@@ -257,18 +238,13 @@ int main()
         }
     }
 
-    cout << countIsolatedVictims(grid, visited, rows, cols) << endl;
-
-
-    cout << "Test 4: ";
-
-    *(*(grid + 0) + 0) = 2;
+    *(*(grid + 0) + 0) = 4;
     *(*(grid + 0) + 1) = 0;
     *(*(grid + 0) + 2) = 0;
     *(*(grid + 0) + 3) = 0;
 
     *(*(grid + 1) + 0) = 0;
-    *(*(grid + 1) + 1) = 0;
+    *(*(grid + 1) + 1) = 1;
     *(*(grid + 1) + 2) = 0;
     *(*(grid + 1) + 3) = 0;
 
@@ -277,62 +253,47 @@ int main()
     *(*(grid + 2) + 2) = 0;
     *(*(grid + 2) + 3) = 0;
 
-    *(*(grid + 3) + 0) = 0;
-    *(*(grid + 3) + 1) = 0;
-    *(*(grid + 3) + 2) = 0;
-    *(*(grid + 3) + 3) = 0;
-
+    *(*(visited + 0) + 0) = 1;
     *(*(visited + 0) + 1) = 1;
+    *(*(visited + 0) + 2) = 1;
+    *(*(visited + 0) + 3) = 1;
 
-    cout << countIsolatedVictims(grid, visited, rows, cols) << endl;
+    *(*(visited + 1) + 0) = 1;
+    *(*(visited + 1) + 1) = 0;
+    *(*(visited + 1) + 2) = 1;
+    *(*(visited + 1) + 3) = 1;
+
+    *(*(visited + 2) + 0) = 1;
+    *(*(visited + 2) + 1) = 1;
+    *(*(visited + 2) + 2) = 1;
+    *(*(visited + 2) + 3) = 1;
+
+    analyzeSupplyPoints(grid, visited, rows, cols);
 
 
-    cout << "Test 5: ";
+    cout << endl;
+    cout << "Test 3:" << endl;
 
     for (int i = 0; i < rows; i++)
     {
         for (int j = 0; j < cols; j++)
         {
+            *(*(grid + i) + j) = 0;
             *(*(visited + i) + j) = 0;
         }
     }
 
-    *(*(grid + 0) + 0) = 2;
-    *(*(grid + 0) + 1) = 0;
-    *(*(grid + 0) + 2) = 0;
-    *(*(grid + 0) + 3) = 0;
+    analyzeSupplyPoints(grid, visited, rows, cols);
 
-    *(*(grid + 1) + 0) = 0;
-    *(*(grid + 1) + 1) = 0;
-    *(*(grid + 1) + 2) = 0;
-    *(*(grid + 1) + 3) = 0;
-
-    *(*(grid + 2) + 0) = 0;
-    *(*(grid + 2) + 1) = 0;
-    *(*(grid + 2) + 2) = 0;
-    *(*(grid + 2) + 3) = 0;
-
-    *(*(grid + 3) + 0) = 0;
-    *(*(grid + 3) + 1) = 0;
-    *(*(grid + 3) + 2) = 0;
-    *(*(grid + 3) + 3) = 2;
-
-    cout << countIsolatedVictims(grid, visited, rows, cols) << endl;
-
-
-    for (int i = 0; i < rows; i++)
-    {
-        delete[] * (visited + i);
-    }
-
-    delete[] visited;
 
     for (int i = 0; i < rows; i++)
     {
         delete[] * (grid + i);
+        delete[] * (visited + i);
     }
 
     delete[] grid;
+    delete[] visited;
 
     return 0;
 }
