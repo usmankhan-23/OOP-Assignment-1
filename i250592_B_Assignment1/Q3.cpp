@@ -149,6 +149,18 @@ int** transformMatrix(int** matrix, int n){
 
 
 
+
+
+void displayMatrix(int** matrix, int n){
+    for (int i = 0; i < n; i++){
+        for (int j = 0; j < n; j++){
+            cout << *(*(matrix + i) + j) << " ";
+        }
+        cout << endl;
+    }
+}
+
+
 int main()
 {
     int n;
@@ -162,48 +174,21 @@ int main()
 
     inputMatrix(matrix, n, n);
 
-    int** transformedMatrix = transformMatrix(matrix, n);
-
     cout << endl;
 
-    cout << "Original Matrix:" << endl;
+    cout << "Matrix:" << endl;
 
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
-            cout << *(*(matrix + i) + j) << " ";
-        }
-
-        cout << endl;
-    }
-
-    cout << endl;
-
-    cout << "Transformed Matrix:" << endl;
-
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
-            cout << *(*(transformedMatrix + i) + j) << " ";
-        }
-
-        cout << endl;
-    }
+    displayMatrix(matrix, n);
 
     for (int i = 0; i < n; i++)
     {
         delete[] * (matrix + i);
-        delete[] * (transformedMatrix + i);
     }
 
     delete[] matrix;
-    delete[] transformedMatrix;
 
     return 0;
 }
-
 
 
 
