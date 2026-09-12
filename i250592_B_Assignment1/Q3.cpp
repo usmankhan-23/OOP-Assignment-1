@@ -92,25 +92,67 @@ int matrixBalance(int** matrix, int n){
 
 
 
-int main(){
-    int n = 3;
-    
+bool isBalancedMatrix(int** matrix, int n)
+{
+    if (diagonalDifference(matrix, n) != 0){
+        return false;
+    }
+    if (matrixBalance(matrix, n) != 0){
+        return false;
+    }
+    int maximumSum = 0;
+
+    for (int j = 0; j < n; j++){
+        maximumSum = maximumSum + *(*(matrix + 0) + j);
+    }
+    int maximumCount = 1;
+    for (int i = 1; i < n; i++){
+        int rowSum = 0;
+        for (int j = 0; j < n; j++){
+            rowSum = rowSum + *(*(matrix + i) + j);
+        }
+        if (rowSum > maximumSum){
+            maximumSum = rowSum;
+            maximumCount = 1;
+        }
+        else if (rowSum == maximumSum){
+            maximumCount = maximumCount + 1;
+        }
+    }
+    if (maximumCount != 1){
+        return false;
+    }
+    return true;
+} 
+
+int main()
+{
+    int n;
+    cout << "Enter matrix size: ";
+    cin >> n;
     int** matrix = createMatrix(n, n);
-    
     cout << "Enter matrix:" << endl;
     inputMatrix(matrix, n, n);
-
-    int result = matrixBalance(matrix, n);
-    cout << "Matrix balance: " << result << endl;
-    for (int i = 0; i < n; i++){
-    delete[] * (matrix + i);
-    
+    cout << endl;
+    cout << "Diagonal Difference: "
+        << diagonalDifference(matrix, n) << endl;
+    cout << "Matrix Balance: "
+        << matrixBalance(matrix, n) << endl;
+    cout << "Dominant Row: "
+        << dominantRow(matrix, n) << endl;
+    if (isBalancedMatrix(matrix, n)){
+        cout << "Balanced Matrix: Yes" << endl;
     }
-
+    else{
+        cout << "Balanced Matrix: No" << endl;
+    }
+    for (int i = 0; i < n; i++){
+        delete[] * (matrix + i);
+    }
     delete[] matrix;
-    
     return 0;
 }
+
 
 
 
