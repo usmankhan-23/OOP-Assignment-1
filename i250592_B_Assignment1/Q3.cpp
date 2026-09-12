@@ -72,39 +72,46 @@ int** rotateMatrix(int** matrix, int n){
 
 
 
+
+int matrixBalance(int** matrix, int n){
+    int aboveSum = 0;
+    int belowSum = 0;
+    for (int i = 0; i < n; i++){
+        for (int j = 0; j < n; j++){
+            if (j > i){
+                aboveSum = aboveSum + *(*(matrix + i) + j);
+            }
+            else if (i > j){
+                belowSum = belowSum + *(*(matrix + i) + j);
+            }
+        }
+    }
+    return aboveSum - belowSum;
+}
+
+
+
+
 int main(){
     int n = 3;
-    int** matrix = createMatrix(n, n);
-    cout << "Enter matrix:" << endl;
     
+    int** matrix = createMatrix(n, n);
+    
+    cout << "Enter matrix:" << endl;
     inputMatrix(matrix, n, n);
-    int** rotatedMatrix = rotateMatrix(matrix, n);
 
-    cout << endl;
-    cout << "Original matrix:" << endl;
+    int result = matrixBalance(matrix, n);
+    cout << "Matrix balance: " << result << endl;
     for (int i = 0; i < n; i++){
-        for (int j = 0; j < n; j++){
-            cout << *(*(matrix + i) + j) << " ";
-        }
-        cout << endl;
+    delete[] * (matrix + i);
+    
     }
 
-    cout << endl;
-    cout << "Rotated matrix:" << endl;
-    for (int i = 0; i < n; i++){
-        for (int j = 0; j < n; j++){
-            cout << *(*(rotatedMatrix + i) + j) << " ";
-        }
-        cout << endl;
-    }
-    for (int i = 0; i < n; i++){
-        delete[] * (matrix + i);
-        delete[] * (rotatedMatrix + i);
-    }
     delete[] matrix;
-    delete[] rotatedMatrix;
+    
     return 0;
 }
+
 
 
 
