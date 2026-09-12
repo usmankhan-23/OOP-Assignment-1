@@ -43,6 +43,21 @@ void displayGrid(int** grid, int rows, int cols){
 
 
 
+int countCells(int** grid, int rows, int cols, int value){
+    int count = 0;
+    for (int r = 0; r < rows; r++){
+        for (int c = 0; c < cols; c++){
+            if (*(*(grid + r) + c) == value){
+                count = count + 1;
+            }
+        }
+    }
+    return count;
+}
+
+
+
+
 int main()
 {
     int rows;
@@ -62,9 +77,15 @@ int main()
 
     cout << endl;
 
-    cout << "Grid:" << endl;
-
     displayGrid(grid, rows, cols);
+
+    cout << endl;
+
+    cout << "Safe areas: " << countCells(grid, rows, cols, 0) << endl;
+    cout << "Blocked areas: " << countCells(grid, rows, cols, 1) << endl;
+    cout << "Victims: " << countCells(grid, rows, cols, 2) << endl;
+    cout << "Supply points: " << countCells(grid, rows, cols, 3) << endl;
+    cout << "Response teams: " << countCells(grid, rows, cols, 4) << endl;
 
     for (int i = 0; i < rows; i++)
     {
