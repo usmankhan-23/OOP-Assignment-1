@@ -170,33 +170,53 @@ void deleteMatrix(int** matrix, int rows){
     delete[] matrix;
 }
 
-int main()
-{
+
+
+
+int main(){
     int n;
-
-    cout << "Enter matrix size: ";
+    cout << "Enter size: ";
     cin >> n;
-
     int** matrix = createMatrix(n, n);
-
-    cout << "Enter matrix:" << endl;
-
+    cout << "Enter martix elements : " << endl;
     inputMatrix(matrix, n, n);
 
+    int difference = diagonalDifference(matrix, n);
+    int row = dominantRow(matrix, n);
+    int balance = matrixBalance(matrix, n);
+    bool balanced = isBalancedMatrix(matrix, n);
+    int** rotatedMatrix = rotateMatrix(matrix, n);
+    int** transformedMatrix = transformMatrix(matrix, n);
     cout << endl;
 
-    cout << "Matrix:" << endl;
-
+    cout << "OriginalMatrix: " << endl;
     displayMatrix(matrix, n);
+    cout << endl;
+    cout << "Diagonal Diff: " << difference << endl;
+    cout << "Dominant row: " << row << endl;
+    cout << "Balance: " << balance << endl;
+    if (balanced){
+        cout << "Balanced: Yes" << endl;
+    }
+    else{
+        cout << "Balanced: No" << endl;
+    }
+    cout << endl;
+    cout << "Rotated matrix:" << endl;
+    displayMatrix(rotatedMatrix, n);
+    cout << endl;
+    cout << "Transformed matrix:" << endl;
+    displayMatrix(transformedMatrix, n);
 
     deleteMatrix(matrix, n);
-
+    deleteMatrix(rotatedMatrix, n);
+    deleteMatrix(transformedMatrix, n);
     cout << endl;
-
-    cout << "Matrix memory released successfully." << endl;
-
+    cout << "All memory work is booom guuuud "<< endl << "ALHAMDULILAH" << endl;
     return 0;
 }
+
+
 
 
 
