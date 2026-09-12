@@ -58,6 +58,23 @@ int countCells(int** grid, int rows, int cols, int value){
 
 
 
+void findFirstCell(int** grid, int rows, int cols, int value, int& row, int& col){
+    row = -1;
+    col = -1;
+    for (int r = 0; r < rows; r++){
+        for (int c = 0; c < cols; c++){
+            if (*(*(grid + r) + c) == value)
+            {
+                row = r;
+                col = c;
+                return;
+            }
+        }
+    }
+}
+
+
+
 int main()
 {
     int rows;
@@ -79,13 +96,17 @@ int main()
 
     displayGrid(grid, rows, cols);
 
-    cout << endl;
+    int value;
+    int row;
+    int col;
 
-    cout << "Safe areas: " << countCells(grid, rows, cols, 0) << endl;
-    cout << "Blocked areas: " << countCells(grid, rows, cols, 1) << endl;
-    cout << "Victims: " << countCells(grid, rows, cols, 2) << endl;
-    cout << "Supply points: " << countCells(grid, rows, cols, 3) << endl;
-    cout << "Response teams: " << countCells(grid, rows, cols, 4) << endl;
+    cout << endl;
+    cout << "Enter value to find: ";
+    cin >> value;
+
+    findFirstCell(grid, rows, cols, value, row, col);
+
+    cout << "First occurrence: (" << row << ", " << col << ")" << endl;
 
     for (int i = 0; i < rows; i++)
     {
