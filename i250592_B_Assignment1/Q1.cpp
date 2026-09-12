@@ -13,6 +13,24 @@ int** createGrid(int rows, int cols){
 
 
 
+void inputGrid(int** grid, int rows, int cols){
+    for (int i = 0; i < rows; i++){
+        for (int j = 0; j < cols; j++){
+            int value;
+            cin >> value;
+            while (value < 0 || value > 4){
+                cout << "Invalid enter again: ";
+                cin >> value;
+            }
+            *(*(grid + i) + j) = value;
+        }
+    }
+}
+
+
+
+
+
 int main()
 {
     int rows;
@@ -26,17 +44,23 @@ int main()
 
     int** grid = createGrid(rows, cols);
 
-    cout << "Grid created successfully." << endl;
+    cout << "Enter grid values:" << endl;
+
+    inputGrid(grid, rows, cols);
+
+    cout << endl;
+
+    cout << "Grid:" << endl;
 
     for (int i = 0; i < rows; i++)
     {
         for (int j = 0; j < cols; j++)
         {
-            *(*(grid + i) + j) = 0;
+            cout << *(*(grid + i) + j) << " ";
         }
-    }
 
-    cout << "Memory allocated successfully." << endl;
+        cout << endl;
+    }
 
     for (int i = 0; i < rows; i++)
     {
@@ -44,8 +68,6 @@ int main()
     }
 
     delete[] grid;
-
-    cout << "Memory released successfully." << endl;
 
     return 0;
 }
