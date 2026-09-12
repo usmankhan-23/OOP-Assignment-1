@@ -161,6 +161,15 @@ void displayMatrix(int** matrix, int n){
 }
 
 
+
+
+void deleteMatrix(int** matrix, int rows){
+    for (int i = 0; i < rows; i++){
+        delete[] * (matrix + i);
+    }
+    delete[] matrix;
+}
+
 int main()
 {
     int n;
@@ -180,12 +189,11 @@ int main()
 
     displayMatrix(matrix, n);
 
-    for (int i = 0; i < n; i++)
-    {
-        delete[] * (matrix + i);
-    }
+    deleteMatrix(matrix, n);
 
-    delete[] matrix;
+    cout << endl;
+
+    cout << "Matrix memory released successfully." << endl;
 
     return 0;
 }
