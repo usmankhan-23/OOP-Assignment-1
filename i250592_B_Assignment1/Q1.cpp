@@ -250,27 +250,71 @@ int** createEvacuationGrid(int** grid, int** visited, int rows, int cols){
 
 
 
+int countRegion(int** grid, int** visited, int rows, int cols, int r, int c){
+    if (r < 0 || r >= rows || c < 0 || c >= cols){
+        return 0;
+    }
+    if (*(*(grid + r) + c) == 1){
+        return 0;
+    }
+    if (*(*(visited + r) + c) == 1){
+        return 0;
+    }
+    *(*(visited + r) + c) = 1;
+    int count = 1;
+    count = count + countRegion(grid, visited, rows, cols, r - 1, c);
+    count = count + countRegion(grid, visited, rows, cols, r + 1, c);
+    count = count + countRegion(grid, visited, rows, cols, r, c - 1);
+    count = count + countRegion(grid, visited, rows, cols, r, c + 1);
+    return count;
+}
+
+
+
+
+int largestConnectedRegion(int** grid, int rows, int cols){
+    int** visited = new int* [rows];
+    for (int i = 0; i < rows; i++){
+        *(visited + i) = new int[cols];
+        for (int j = 0; j < cols; j++){
+            *(*(visited + i) + j) = 0;
+        }
+    }
+    int largest = 0;
+    for (int i = 0; i < rows; i++){
+        for (int j = 0; j < cols; j++){
+            if (*(*(grid + i) + j) != 1 && *(*(visited + i) + j) == 0){
+                int regionSize = countRegion(grid,visited,rows,cols,i,j);
+                if (regionSize > largest){
+                    largest = regionSize;
+                }
+            }
+        }
+    }
+    for (int i = 0; i < rows; i++){
+        delete[] * (visited + i);
+    }
+    delete[] visited;
+    return largest;
+}
+
+
+
+
 
 int main()
 {
-    int rows = 3;
-    int cols = 3;
+    int rows = 4;
+    int cols = 4;
 
     int** grid = createGrid(rows, cols);
-    int** visited = createGrid(rows, cols);
 
-    int values[3][3] =
+    int values[4][4] =
     {
-        {0, 0, 1},
-        {2, 4, 3},
-        {0, 2, 1}
-    };
-
-    int visitValues[3][3] =
-    {
-        {1, 0, 0},
-        {1, 1, 1},
-        {1, 0, 0}
+        {0, 0, 1, 0},
+        {0, 2, 1, 0},
+        {1, 1, 1, 0},
+        {3, 0, 0, 0}
     };
 
     for (int i = 0; i < rows; i++)
@@ -278,30 +322,29 @@ int main()
         for (int j = 0; j < cols; j++)
         {
             *(*(grid + i) + j) = values[i][j];
-            *(*(visited + i) + j) = visitValues[i][j];
         }
     }
-
-    int** evacuationGrid = createEvacuationGrid(grid, visited, rows, cols);
 
     cout << "Original Grid:" << endl;
     displayGrid(grid, rows, cols);
 
     cout << endl;
 
-    cout << "Evacuation Grid:" << endl;
-    displayGrid(evacuationGrid, rows, cols);
+    int result = largestConnectedRegion(grid, rows, cols);
+
+    cout << "Largest Connected Region: " << result << endl;
+
+    cout << endl;
+
+    cout << "Original Grid After Calculation:" << endl;
+    displayGrid(grid, rows, cols);
 
     for (int i = 0; i < rows; i++)
     {
         delete[] * (grid + i);
-        delete[] * (visited + i);
-        delete[] * (evacuationGrid + i);
     }
 
     delete[] grid;
-    delete[] visited;
-    delete[] evacuationGrid;
 
     return 0;
 }
