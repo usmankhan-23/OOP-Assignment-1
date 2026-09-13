@@ -10,9 +10,6 @@ int** createGrid(int rows, int cols){
 }
 
 
-
-
-
 void inputGrid(int** grid, int rows, int cols){
     for (int i = 0; i < rows; i++){
         for (int j = 0; j < cols; j++){
@@ -28,9 +25,6 @@ void inputGrid(int** grid, int rows, int cols){
 }
 
 
-
-
-
 void displayGrid(int** grid, int rows, int cols){
     for (int i = 0; i < rows; i++){
         for (int j = 0; j < cols; j++){
@@ -39,8 +33,6 @@ void displayGrid(int** grid, int rows, int cols){
         cout << endl;
     }
 }
-
-
 
 
 int countCells(int** grid, int rows, int cols, int value){
@@ -54,8 +46,6 @@ int countCells(int** grid, int rows, int cols, int value){
     }
     return count;
 }
-
-
 
 
 void findFirstCell(int** grid, int rows, int cols, int value, int& row, int& col){
@@ -74,9 +64,6 @@ void findFirstCell(int** grid, int rows, int cols, int value, int& row, int& col
 }
 
 
-
-
-
 bool isValidMove(int** grid, int** visited, int rows, int cols, int r, int c){
     if (r < 0 || r >= rows || c < 0 || c >= cols){
         return false;
@@ -89,8 +76,6 @@ bool isValidMove(int** grid, int** visited, int rows, int cols, int r, int c){
     }
     return true;
 }
-
-
 
 
 int countReachable(int** grid, int** visited, int rows, int cols, int r, int c){
@@ -107,12 +92,6 @@ int countReachable(int** grid, int** visited, int rows, int cols, int r, int c){
 }
 
 
-
-
-
-
-
-
 int countAccessibleVictims(int** grid, int** visited, int rows, int cols){
     int count = 0;
     for (int i = 0; i < rows; i++){
@@ -125,8 +104,6 @@ int countAccessibleVictims(int** grid, int** visited, int rows, int cols){
     }
     return count;
 }
-
-
 
 
 int countIsolatedVictims(int** grid, int** visited, int rows, int cols){
@@ -158,9 +135,6 @@ int countIsolatedVictims(int** grid, int** visited, int rows, int cols){
 } 
 
 
-
-
-
 void analyzeSupplyPoints(int** grid, int** visited, int rows, int cols){
     int supplyCount = 0;
     for (int i = 0; i < rows; i++){
@@ -182,8 +156,6 @@ void analyzeSupplyPoints(int** grid, int** visited, int rows, int cols){
         cout << "No supply point exists." << endl;
     }
 }
-
-
 
 
 int** createVictimReport(int** grid, int** visited, int rows, int cols, int& count){
@@ -208,9 +180,6 @@ int** createVictimReport(int** grid, int** visited, int rows, int cols, int& cou
     }
     return report;
 }
-
-
-
 
 
 int** createEvacuationGrid(int** grid, int** visited, int rows, int cols){
@@ -248,8 +217,6 @@ int** createEvacuationGrid(int** grid, int** visited, int rows, int cols){
 }
 
 
-
-
 int countRegion(int** grid, int** visited, int rows, int cols, int r, int c){
     if (r < 0 || r >= rows || c < 0 || c >= cols){
         return 0;
@@ -268,8 +235,6 @@ int countRegion(int** grid, int** visited, int rows, int cols, int r, int c){
     count = count + countRegion(grid, visited, rows, cols, r, c + 1);
     return count;
 }
-
-
 
 
 int largestConnectedRegion(int** grid, int rows, int cols){
@@ -299,52 +264,103 @@ int largestConnectedRegion(int** grid, int rows, int cols){
 }
 
 
-
-
-
-int main()
-{
-    int rows = 4;
-    int cols = 4;
-
-    int** grid = createGrid(rows, cols);
-
-    int values[4][4] =
-    {
-        {0, 0, 1, 0},
-        {0, 2, 1, 0},
-        {1, 1, 1, 0},
-        {3, 0, 0, 0}
-    };
-
-    for (int i = 0; i < rows; i++)
-    {
-        for (int j = 0; j < cols; j++)
-        {
-            *(*(grid + i) + j) = values[i][j];
-        }
-    }
-
-    cout << "Original Grid:" << endl;
-    displayGrid(grid, rows, cols);
-
-    cout << endl;
-
-    int result = largestConnectedRegion(grid, rows, cols);
-
-    cout << "Largest Connected Region: " << result << endl;
-
-    cout << endl;
-
-    cout << "Original Grid After Calculation:" << endl;
-    displayGrid(grid, rows, cols);
-
-    for (int i = 0; i < rows; i++)
-    {
+void deleteGrid(int** grid, int rows){
+    for (int i = 0; i < rows; i++){
         delete[] * (grid + i);
     }
-
     delete[] grid;
+}
 
+
+int main(){
+    int rows;
+    int cols;
+    cout << "Enter number of rows: ";
+    cin >> rows;
+    cout << "Enter number of columns: ";
+    cin >> cols;
+    int** grid = createGrid(rows, cols);
+    cout << "Enter grid values:" << endl;
+    inputGrid(grid, rows, cols);
+
+    int** visited = createGrid(rows, cols);
+    for (int i = 0; i < rows; i++){
+        for (int j = 0; j < cols; j++){
+            *(*(visited + i) + j) = 0;
+        }
+    }
+    int teamRow;
+    int teamCol;
+    findFirstCell(grid, rows, cols, 4, teamRow, teamCol);
+    int reachableCells = 0;
+    if (teamRow != -1 && teamCol != -1){
+        reachableCells = countReachable(grid,visited,rows,cols,teamRow,teamCol);
+    }
+    int blockedAreas = countCells(grid, rows, cols, 1);
+    int victims = countCells(grid, rows, cols, 2);
+    int supplyPoints = countCells(grid, rows, cols, 3);
+    int emergencyTeams = countCells(grid, rows, cols, 4);
+    int emptyAreas = countCells(grid, rows, cols, 0);
+    int accessibleVictims = countAccessibleVictims(grid,visited,rows,cols);
+    int inaccessibleVictims = victims - accessibleVictims;
+    int isolatedVictims = countIsolatedVictims(grid,visited,rows,cols);
+    int reachableSupplyPoints = 0;
+
+    for (int i = 0; i < rows; i++){
+        for (int j = 0; j < cols; j++){
+            if (*(*(grid + i) + j) == 3 &&
+                *(*(visited + i) + j) == 1){
+                reachableSupplyPoints++;
+            }
+        }
+    }
+    int victimReportCount;
+    int** victimReport = createVictimReport(grid,visited,rows,cols,victimReportCount);
+    analyzeSupplyPoints(grid,visited,rows,cols);
+    int largestRegion = largestConnectedRegion(grid,rows,cols);
+    int** evacuationGrid = createEvacuationGrid(grid,visited,rows,cols);
+    cout << endl;
+
+    cout << "============================================" << endl;
+    cout << "EMERGENCY RESPONSE REPORT" << endl;
+    cout << "============================================" << endl;
+    cout << "Grid Size : " << rows << " x " << cols << endl;
+    cout << "Total Cells : " << rows * cols << endl;
+    cout << "Empty Areas : " << emptyAreas << endl;
+    cout << "Blocked Areas : " << blockedAreas << endl;
+    cout << "Victims : " << victims << endl;
+    cout << "Supply Points : " << supplyPoints << endl;
+    cout << "Emergency Teams : " << emergencyTeams << endl;
+    cout << "Reachable Cells : " << reachableCells << endl;
+    cout << "Accessible Victims : " << accessibleVictims << endl;
+    cout << "Inaccessible Victims : " << inaccessibleVictims << endl;
+    cout << "Isolated Victims : " << isolatedVictims << endl;
+    cout << "Reachable Supply Points : " << reachableSupplyPoints << endl;
+    cout << "Largest Connected Region : " << largestRegion << endl;
+    cout << "============================================" << endl;
+
+    cout << endl;
+    cout << "Accessible Victim Coordinates:" << endl;
+    if (victimReportCount == 0){
+        cout << "No accessible victims." << endl;
+    }
+    else{
+        for (int i = 0; i < victimReportCount; i++){
+            cout << "("<< *(*(victimReport + i) + 0)<< ", " << *(*(victimReport + i) + 1) << ")" << endl;
+        }
+    }
+    cout << endl;
+    cout << "Evacuation Grid:" << endl;
+    displayGrid(evacuationGrid,rows,cols);
+
+    if (victimReport != nullptr){
+        for (int i = 0; i < victimReportCount; i++){
+            delete[] * (victimReport + i);
+        }
+        delete[] victimReport;
+    }
+    deleteGrid(evacuationGrid, rows);
+    deleteGrid(visited, rows);
+    deleteGrid(grid, rows);
     return 0;
 }
