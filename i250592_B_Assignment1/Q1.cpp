@@ -77,27 +77,27 @@ void findFirstCell(int** grid, int rows, int cols, int value, int& row, int& col
 
 
 
-bool isValidMove(int** grid, bool** visited, int rows, int cols, int r, int c){
+bool isValidMove(int** grid, int** visited, int rows, int cols, int r, int c){
     if (r < 0 || r >= rows || c < 0 || c >= cols){
         return false;
     }
     if (*(*(grid + r) + c) == 1){
         return false;
     }
-    if (*(*(visited + r) + c)){
+    if (*(*(visited + r) + c) == 1){
         return false;
     }
     return true;
-} 
+}
 
 
 
 
-int countReachable(int** grid, bool** visited, int rows, int cols, int r, int c){ 
+int countReachable(int** grid, int** visited, int rows, int cols, int r, int c){
     if (!isValidMove(grid, visited, rows, cols, r, c)){
         return 0;
     }
-    *(*(visited + r) + c) = true;
+    *(*(visited + r) + c) = 1;
     int count = 1;
     count = count + countReachable(grid, visited, rows, cols, r - 1, c);
     count = count + countReachable(grid, visited, rows, cols, r + 1, c);
@@ -109,19 +109,20 @@ int countReachable(int** grid, bool** visited, int rows, int cols, int r, int c)
 
 
 
-int countAccessibleVictims(int** grid, bool** visited, int rows, int cols, int r, int c){
-    if (!isValidMove(grid, visited, rows, cols, r, c)){
-        return 0;
-    }
-    *(*(visited + r) + c) = true;
+
+
+
+
+int countAccessibleVictims(int** grid, int** visited, int rows, int cols){
     int count = 0;
-    if (*(*(grid + r) + c) == 2){
-        count = 1;
+    for (int i = 0; i < rows; i++){
+        for (int j = 0; j < cols; j++){
+            if (*(*(grid + i) + j) == 2 &&
+                *(*(visited + i) + j) == 1){
+                count++;
+            }
+        }
     }
-    count = count + countAccessibleVictims(grid, visited, rows, cols, r - 1, c);
-    count = count + countAccessibleVictims(grid, visited, rows, cols, r + 1, c);
-    count = count + countAccessibleVictims(grid, visited, rows, cols, r, c - 1);
-    count = count + countAccessibleVictims(grid, visited, rows, cols, r, c + 1);
     return count;
 }
 
@@ -183,47 +184,93 @@ void analyzeSupplyPoints(int** grid, int** visited, int rows, int cols){
 }
 
 
+
+
+int** createVictimReport(int** grid, int** visited, int rows, int cols, int& count){
+    count = countAccessibleVictims(grid, visited, rows, cols);
+    if (count == 0){
+        return nullptr;
+    }
+    int** report = new int* [count];
+    for (int i = 0; i < count; i++){
+        *(report + i) = new int[2];
+    }
+    int reportIndex = 0;
+    for (int i = 0; i < rows; i++){
+        for (int j = 0; j < cols; j++){
+            if (*(*(grid + i) + j) == 2 &&
+                *(*(visited + i) + j) == 1){
+                *(*(report + reportIndex) + 0) = i;
+                *(*(report + reportIndex) + 1) = j;
+                reportIndex++;
+            } 
+        }
+    }
+    return report;
+}
+
+
 int main()
 {
     int rows = 3;
-    int cols = 4;
+    int cols = 3;
 
     int** grid = createGrid(rows, cols);
     int** visited = createGrid(rows, cols);
 
+    cout << "Test 1:" << endl;
+
     *(*(grid + 0) + 0) = 4;
     *(*(grid + 0) + 1) = 0;
-    *(*(grid + 0) + 2) = 3;
-    *(*(grid + 0) + 3) = 1;
+    *(*(grid + 0) + 2) = 2;
 
     *(*(grid + 1) + 0) = 0;
     *(*(grid + 1) + 1) = 1;
     *(*(grid + 1) + 2) = 0;
-    *(*(grid + 1) + 3) = 3;
 
-    *(*(grid + 2) + 0) = 0;
+    *(*(grid + 2) + 0) = 2;
     *(*(grid + 2) + 1) = 0;
-    *(*(grid + 2) + 0) = 0;
-    *(*(grid + 2) + 3) = 0;
+    *(*(grid + 2) + 2) = 3;
 
     *(*(visited + 0) + 0) = 1;
     *(*(visited + 0) + 1) = 1;
     *(*(visited + 0) + 2) = 1;
-    *(*(visited + 0) + 3) = 0;
 
     *(*(visited + 1) + 0) = 1;
     *(*(visited + 1) + 1) = 0;
     *(*(visited + 1) + 2) = 1;
-    *(*(visited + 1) + 3) = 0;
 
     *(*(visited + 2) + 0) = 1;
     *(*(visited + 2) + 1) = 1;
     *(*(visited + 2) + 2) = 1;
-    *(*(visited + 2) + 3) = 1;
 
-    cout << "Test 1:" << endl;
+    int count = 0;
 
-    analyzeSupplyPoints(grid, visited, rows, cols);
+    int** report = createVictimReport(
+        grid,
+        visited,
+        rows,
+        cols,
+        count
+    );
+
+    cout << "Accessible Victims: " << count << endl;
+
+    for (int i = 0; i < count; i++)
+    {
+        cout << "("
+            << *(*(report + i) + 0)
+            << ", "
+            << *(*(report + i) + 1)
+            << ")" << endl;
+    }
+
+    for (int i = 0; i < count; i++)
+    {
+        delete[] * (report + i);
+    }
+
+    delete[] report;
 
 
     cout << endl;
@@ -240,35 +287,46 @@ int main()
 
     *(*(grid + 0) + 0) = 4;
     *(*(grid + 0) + 1) = 0;
-    *(*(grid + 0) + 2) = 0;
-    *(*(grid + 0) + 3) = 0;
+    *(*(grid + 0) + 2) = 2;
 
-    *(*(grid + 1) + 0) = 0;
+    *(*(grid + 1) + 0) = 1;
     *(*(grid + 1) + 1) = 1;
-    *(*(grid + 1) + 2) = 0;
-    *(*(grid + 1) + 3) = 0;
+    *(*(grid + 1) + 2) = 1;
 
     *(*(grid + 2) + 0) = 0;
     *(*(grid + 2) + 1) = 0;
     *(*(grid + 2) + 2) = 0;
-    *(*(grid + 2) + 3) = 0;
 
     *(*(visited + 0) + 0) = 1;
     *(*(visited + 0) + 1) = 1;
-    *(*(visited + 0) + 2) = 1;
-    *(*(visited + 0) + 3) = 1;
+    *(*(visited + 0) + 2) = 0;
 
-    *(*(visited + 1) + 0) = 1;
-    *(*(visited + 1) + 1) = 0;
-    *(*(visited + 1) + 2) = 1;
-    *(*(visited + 1) + 3) = 1;
+    int count2 = 0;
 
-    *(*(visited + 2) + 0) = 1;
-    *(*(visited + 2) + 1) = 1;
-    *(*(visited + 2) + 2) = 1;
-    *(*(visited + 2) + 3) = 1;
+    int** report2 = createVictimReport(
+        grid,
+        visited,
+        rows,
+        cols,
+        count2
+    );
 
-    analyzeSupplyPoints(grid, visited, rows, cols);
+    cout << "Accessible Victims: " << count2 << endl;
+
+    if (count2 == 0)
+    {
+        cout << "No accessible victims." << endl;
+    }
+
+    if (report2 != nullptr)
+    {
+        for (int i = 0; i < count2; i++)
+        {
+            delete[] * (report2 + i);
+        }
+
+        delete[] report2;
+    }
 
 
     cout << endl;
@@ -283,7 +341,87 @@ int main()
         }
     }
 
-    analyzeSupplyPoints(grid, visited, rows, cols);
+    *(*(grid + 0) + 0) = 2;
+    *(*(grid + 0) + 1) = 0;
+    *(*(grid + 0) + 2) = 0;
+
+    *(*(grid + 1) + 0) = 0;
+    *(*(grid + 1) + 1) = 2;
+    *(*(grid + 1) + 2) = 0;
+
+    *(*(grid + 2) + 0) = 0;
+    *(*(grid + 2) + 1) = 0;
+    *(*(grid + 2) + 2) = 2;
+
+    *(*(visited + 0) + 0) = 1;
+    *(*(visited + 0) + 1) = 0;
+    *(*(visited + 0) + 2) = 0;
+
+    *(*(visited + 1) + 0) = 0;
+    *(*(visited + 1) + 1) = 1;
+    *(*(visited + 1) + 2) = 0;
+
+    *(*(visited + 2) + 0) = 0;
+    *(*(visited + 2) + 1) = 0;
+    *(*(visited + 2) + 2) = 1;
+
+    int count3 = 0;
+
+    int** report3 = createVictimReport(
+        grid,
+        visited,
+        rows,
+        cols,
+        count3
+    );
+
+    cout << "Accessible Victims: " << count3 << endl;
+
+    for (int i = 0; i < count3; i++)
+    {
+        cout << "("
+            << *(*(report3 + i) + 0)
+            << ", "
+            << *(*(report3 + i) + 1)
+            << ")" << endl;
+    }
+
+    for (int i = 0; i < count3; i++)
+    {
+        delete[] * (report3 + i);
+    }
+
+    delete[] report3;
+
+
+    cout << endl;
+    cout << "Test 4:" << endl;
+
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            *(*(grid + i) + j) = 0;
+            *(*(visited + i) + j) = 0;
+        }
+    }
+
+    int count4 = 0;
+
+    int** report4 = createVictimReport(
+        grid,
+        visited,
+        rows,
+        cols,
+        count4
+    );
+
+    cout << "Accessible Victims: " << count4 << endl;
+
+    if (report4 == nullptr)
+    {
+        cout << "Report is empty." << endl;
+    }
 
 
     for (int i = 0; i < rows; i++)
@@ -297,4 +435,3 @@ int main()
 
     return 0;
 }
-
