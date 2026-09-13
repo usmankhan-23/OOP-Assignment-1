@@ -210,6 +210,47 @@ int** createVictimReport(int** grid, int** visited, int rows, int cols, int& cou
 }
 
 
+
+
+
+int** createEvacuationGrid(int** grid, int** visited, int rows, int cols){
+    int** evacuationGrid = new int* [rows];
+    for (int i = 0; i < rows; i++){
+        *(evacuationGrid + i) = new int[cols];
+    }
+    for (int i = 0; i < rows; i++){
+        for (int j = 0; j < cols; j++){
+            int value = *(*(grid + i) + j);
+
+            if (value == 0){
+                if (*(*(visited + i) + j) == 1){
+                    value = 5;
+                }
+            }
+            else if (value == 1){
+                value = 1;
+            }
+            else if (value == 2){
+                if (*(*(visited + i) + j) == 1){
+                    value = 6;
+                }
+            }
+            else if (value == 3){
+                value = 3;
+            }
+            else if (value == 4){
+                value = 4;
+            }
+            *(*(evacuationGrid + i) + j) = value;
+        }
+    }
+    return evacuationGrid;
+}
+
+
+
+
+
 int main()
 {
     int rows = 3;
@@ -218,220 +259,49 @@ int main()
     int** grid = createGrid(rows, cols);
     int** visited = createGrid(rows, cols);
 
-    cout << "Test 1:" << endl;
-
-    *(*(grid + 0) + 0) = 4;
-    *(*(grid + 0) + 1) = 0;
-    *(*(grid + 0) + 2) = 2;
-
-    *(*(grid + 1) + 0) = 0;
-    *(*(grid + 1) + 1) = 1;
-    *(*(grid + 1) + 2) = 0;
-
-    *(*(grid + 2) + 0) = 2;
-    *(*(grid + 2) + 1) = 0;
-    *(*(grid + 2) + 2) = 3;
-
-    *(*(visited + 0) + 0) = 1;
-    *(*(visited + 0) + 1) = 1;
-    *(*(visited + 0) + 2) = 1;
-
-    *(*(visited + 1) + 0) = 1;
-    *(*(visited + 1) + 1) = 0;
-    *(*(visited + 1) + 2) = 1;
-
-    *(*(visited + 2) + 0) = 1;
-    *(*(visited + 2) + 1) = 1;
-    *(*(visited + 2) + 2) = 1;
-
-    int count = 0;
-
-    int** report = createVictimReport(
-        grid,
-        visited,
-        rows,
-        cols,
-        count
-    );
-
-    cout << "Accessible Victims: " << count << endl;
-
-    for (int i = 0; i < count; i++)
+    int values[3][3] =
     {
-        cout << "("
-            << *(*(report + i) + 0)
-            << ", "
-            << *(*(report + i) + 1)
-            << ")" << endl;
-    }
+        {0, 0, 1},
+        {2, 4, 3},
+        {0, 2, 1}
+    };
 
-    for (int i = 0; i < count; i++)
+    int visitValues[3][3] =
     {
-        delete[] * (report + i);
-    }
-
-    delete[] report;
-
-
-    cout << endl;
-    cout << "Test 2:" << endl;
+        {1, 0, 0},
+        {1, 1, 1},
+        {1, 0, 0}
+    };
 
     for (int i = 0; i < rows; i++)
     {
         for (int j = 0; j < cols; j++)
         {
-            *(*(grid + i) + j) = 0;
-            *(*(visited + i) + j) = 0;
+            *(*(grid + i) + j) = values[i][j];
+            *(*(visited + i) + j) = visitValues[i][j];
         }
     }
 
-    *(*(grid + 0) + 0) = 4;
-    *(*(grid + 0) + 1) = 0;
-    *(*(grid + 0) + 2) = 2;
+    int** evacuationGrid = createEvacuationGrid(grid, visited, rows, cols);
 
-    *(*(grid + 1) + 0) = 1;
-    *(*(grid + 1) + 1) = 1;
-    *(*(grid + 1) + 2) = 1;
-
-    *(*(grid + 2) + 0) = 0;
-    *(*(grid + 2) + 1) = 0;
-    *(*(grid + 2) + 2) = 0;
-
-    *(*(visited + 0) + 0) = 1;
-    *(*(visited + 0) + 1) = 1;
-    *(*(visited + 0) + 2) = 0;
-
-    int count2 = 0;
-
-    int** report2 = createVictimReport(
-        grid,
-        visited,
-        rows,
-        cols,
-        count2
-    );
-
-    cout << "Accessible Victims: " << count2 << endl;
-
-    if (count2 == 0)
-    {
-        cout << "No accessible victims." << endl;
-    }
-
-    if (report2 != nullptr)
-    {
-        for (int i = 0; i < count2; i++)
-        {
-            delete[] * (report2 + i);
-        }
-
-        delete[] report2;
-    }
-
+    cout << "Original Grid:" << endl;
+    displayGrid(grid, rows, cols);
 
     cout << endl;
-    cout << "Test 3:" << endl;
 
-    for (int i = 0; i < rows; i++)
-    {
-        for (int j = 0; j < cols; j++)
-        {
-            *(*(grid + i) + j) = 0;
-            *(*(visited + i) + j) = 0;
-        }
-    }
-
-    *(*(grid + 0) + 0) = 2;
-    *(*(grid + 0) + 1) = 0;
-    *(*(grid + 0) + 2) = 0;
-
-    *(*(grid + 1) + 0) = 0;
-    *(*(grid + 1) + 1) = 2;
-    *(*(grid + 1) + 2) = 0;
-
-    *(*(grid + 2) + 0) = 0;
-    *(*(grid + 2) + 1) = 0;
-    *(*(grid + 2) + 2) = 2;
-
-    *(*(visited + 0) + 0) = 1;
-    *(*(visited + 0) + 1) = 0;
-    *(*(visited + 0) + 2) = 0;
-
-    *(*(visited + 1) + 0) = 0;
-    *(*(visited + 1) + 1) = 1;
-    *(*(visited + 1) + 2) = 0;
-
-    *(*(visited + 2) + 0) = 0;
-    *(*(visited + 2) + 1) = 0;
-    *(*(visited + 2) + 2) = 1;
-
-    int count3 = 0;
-
-    int** report3 = createVictimReport(
-        grid,
-        visited,
-        rows,
-        cols,
-        count3
-    );
-
-    cout << "Accessible Victims: " << count3 << endl;
-
-    for (int i = 0; i < count3; i++)
-    {
-        cout << "("
-            << *(*(report3 + i) + 0)
-            << ", "
-            << *(*(report3 + i) + 1)
-            << ")" << endl;
-    }
-
-    for (int i = 0; i < count3; i++)
-    {
-        delete[] * (report3 + i);
-    }
-
-    delete[] report3;
-
-
-    cout << endl;
-    cout << "Test 4:" << endl;
-
-    for (int i = 0; i < rows; i++)
-    {
-        for (int j = 0; j < cols; j++)
-        {
-            *(*(grid + i) + j) = 0;
-            *(*(visited + i) + j) = 0;
-        }
-    }
-
-    int count4 = 0;
-
-    int** report4 = createVictimReport(
-        grid,
-        visited,
-        rows,
-        cols,
-        count4
-    );
-
-    cout << "Accessible Victims: " << count4 << endl;
-
-    if (report4 == nullptr)
-    {
-        cout << "Report is empty." << endl;
-    }
-
+    cout << "Evacuation Grid:" << endl;
+    displayGrid(evacuationGrid, rows, cols);
 
     for (int i = 0; i < rows; i++)
     {
         delete[] * (grid + i);
         delete[] * (visited + i);
+        delete[] * (evacuationGrid + i);
     }
 
     delete[] grid;
     delete[] visited;
+    delete[] evacuationGrid;
 
     return 0;
 }
